@@ -3,25 +3,15 @@ import {
   TextInput,
   Text,
   View,
-  Platform,
   StatusBar,
-  Dimensions,
   SafeAreaView,
   ScrollView,
   ImageBackground,
   FlatList,
-  ScrollViewBase,
-  VirtualizedList,
 } from 'react-native';
 import React from 'react';
 import Feather from 'react-native-vector-icons/Feather';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-// import TextInputWithLabel from '../../textInput/TextInputWithLabel';
-import * as Animatable from 'react-native-animatable';
-// import validators from '../../ultis/Validator';
 import {useState} from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import CustomDrawer from '../../ultis/customDrawer';
 import Carousel from 'react-native-snap-carousel';
 import {
   fruitesList,
@@ -33,7 +23,7 @@ import BannerSlider from '../../ultis/banner/bannerSlider';
 import CustomSwitch from '../../ultis/customSwitch/customSwitch';
 import ListItem from '../../ultis/listItem/listItem';
 
-function HomeScreen() {
+function HomeScreen({navigation}) {
   const [groceryTab, setGroceryTab] = useState(1);
 
   const renderBanner = ({item, index}) => {
@@ -44,30 +34,32 @@ function HomeScreen() {
     setGroceryTab(value);
   };
   const renderGroceryList = ({item, index}) => {
-    return <ListItem data={item} />;
+    return <ListItem data={item} navigation={navigation} />;
   };
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <ScrollView style={{padding: 20}}>
+        <StatusBar backgroundColor="transparent" barStyle="light-content" />
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginBottom: 20,
+            alignItems: 'center',
           }}>
           <Text
             style={{
-              fontSize: 16,
+              fontSize: 20,
               fontFamily: 'Roboto-Medium',
               fontWeight: 'bold',
             }}>
             Hellow Ahsan Butt
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}>
             <ImageBackground
               source={require('../../../../assets/Ahsan.jpg')}
-              style={{width: 35, height: 35}}
+              style={{width: 45, height: 45}}
               imageStyle={{borderRadius: 25}}
             />
           </TouchableOpacity>
@@ -81,7 +73,7 @@ function HomeScreen() {
             paddingHorizontal: 10,
             paddingVertical: 8,
             borderColor: '#0aada8',
-            height: 55,
+            height: 40,
           }}>
           <Feather
             name="search"
@@ -89,21 +81,20 @@ function HomeScreen() {
             color="#C6C6C6"
             styel={{marginRight: 5}}
           />
-          <TextInput placeholder="Search" />
+          <TextInput placeholder="Search" style={{height: 40}} />
         </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginTop: 20,
+            marginTop: 15,
           }}>
           <Text
             style={{
               fontSize: 16,
               fontFamily: 'Roboto-Medium',
-              fontWeight: 'bold',
               color: '#0aada8',
-              backgroundColor: '#fff',
+              fontWeight: 'bold',
             }}>
             HighLited Products
           </Text>
@@ -115,7 +106,6 @@ function HomeScreen() {
                 color: '#0aada8',
                 backgroundColor: '#f7f6f2',
                 fontWeight: 'bold',
-                padding: 5,
               }}>
               See All
             </Text>
@@ -135,16 +125,18 @@ function HomeScreen() {
             onSelectSwitch={onSelectSwitch}
           />
         </View>
-        {groceryTab === 1 && (
-          <FlatList data={vegetablesList} renderItem={renderGroceryList} />
-        )}
-        {groceryTab === 2 && (
-          <FlatList
-            nestedScrollEnabled={true}
-            data={fruitesList}
-            renderItem={renderGroceryList}
-          />
-        )}
+        <View>
+          {groceryTab === 1 && (
+            <FlatList data={vegetablesList} renderItem={renderGroceryList} />
+          )}
+          {groceryTab === 2 && (
+            <FlatList
+              nestedScrollEnabled={true}
+              data={fruitesList}
+              renderItem={renderGroceryList}
+            />
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

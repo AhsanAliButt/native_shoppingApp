@@ -1,5 +1,6 @@
 import {createContext, useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 
 export const AuthContext = createContext();
 
@@ -39,7 +40,27 @@ export const AuthProvider = ({children}) => {
           } catch (error) {
             console.log(error);
           }
-        }
+        },
+        userData: async () => {
+          try {
+            const user = auth().currentUser;
+            return user;
+          } catch (error) {
+            console.log(error);
+          }
+        },
+        getUserData: async () => {
+          try {
+            const user = auth().currentUser;
+            const userData = await FirebaseFirestoreTypes.firestore()
+              .collection('users')
+              .doc(user.uid)
+              .get();
+            return userData.data();
+          } catch (error) {
+            console.log(error);
+          }
+        },
       }}>
       {children}
     </AuthContext.Provider>

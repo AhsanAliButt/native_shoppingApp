@@ -1,7 +1,6 @@
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import HomeScreen from '../screens/home/HomeScreen';
 import SettingsScreen from '../screens/settings/settings';
 import ProfileScreen from '../screens/profile/profileScreen';
@@ -12,17 +11,18 @@ import {NavigationContainer} from '@react-navigation/native';
 import TabNavigator from './TabNavigator';
 const Drawer = createDrawerNavigator();
 
-const AuthStack = () => {
+const AppStack = () => {
   return (
     <Drawer.Navigator
-      // drawerContent={props => <CustomDrawer {...props} />}
+      drawerContent={props => <CustomDrawer {...props} />}
       screenOptions={{
+        drawerPosition: 'left',
         headerShown: false,
         drawerActiveBackgroundColor: '#aa18ea',
         drawerActiveTintColor: '#fff',
         drawerInactiveTintColor: '#333',
         drawerLabelStyle: {
-          marginLeft: -15,
+          marginLeft: 10,
           fontFamily: 'Roboto-Medium',
           fontSize: 15,
         },
@@ -37,7 +37,7 @@ const AuthStack = () => {
         }}
       />
       <Drawer.Screen
-        name="ProfileScreen"
+        name="Profile"
         component={ProfileScreen}
         options={{
           drawerIcon: ({color}) => {
@@ -49,7 +49,7 @@ const AuthStack = () => {
         name="MessagesScreen"
         component={MessagesScreen}
         options={{
-          drawerIcon: color => {
+          drawerIcon: ({color}) => {
             <Ionicons
               name="chatbox-ellipses-outline"
               size={22}
@@ -61,7 +61,7 @@ const AuthStack = () => {
       <Drawer.Screen
         name="EmailScreen"
         component={EmailScreen}
-        options={{
+        screenOptions={{
           drawerIcon: color => {
             <Ionicons name="timer-outline" size={22} color={color} />;
           },
@@ -80,4 +80,4 @@ const AuthStack = () => {
   );
 };
 
-export default AuthStack;
+export default AppStack;

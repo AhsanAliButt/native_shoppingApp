@@ -19,8 +19,12 @@ import * as Animatable from 'react-native-animatable';
 import validators from '../../ultis/Validator';
 import {useState} from 'react';
 import auth from '@react-native-firebase/auth';
+// import {useDispatch} from 'react-redux';
+// import {useSelector} from 'react-redux';
+// import {setUser} from '../../redux/slicer/userSlicer';
 
 const SignUpScreen = ({navigation}) => {
+  // const dispatch = useDispatch();
   const [data, setData] = useState({
     email: '',
     password: '',
@@ -163,9 +167,20 @@ const SignUpScreen = ({navigation}) => {
     } else {
       auth()
         .createUserWithEmailAndPassword(data.email, data.password)
-        .then(() => {
-          navigation.navigate('HomeScreen');
-        })
+        .then(() =>
+          // {auth}
+          {
+            // console.log(auth);
+            // console.log(auth.user.uid);
+            // console.log(auth.uid);
+            // dispatch(setUser({
+            //   email: auth.email,
+            //   token: auth.accessToken,
+            //   id: auth.uid,
+            // }));
+            navigation.navigate('HomeScreen');
+          },
+        )
         .catch(error => {
           console.log(error);
         });

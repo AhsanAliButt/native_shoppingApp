@@ -3,7 +3,7 @@ import Potato from '../../../assets/Potato.jpg';
 import {Dimensions} from 'react-native';
 
 export const goToHomePage = ({navigation}) => {
-  return navigation.navigate('HomeScreen');
+  return navigation.navigate('Home');
 };
 
 export const slideData = [

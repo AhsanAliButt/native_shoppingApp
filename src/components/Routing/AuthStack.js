@@ -1,47 +1,49 @@
-// import React from 'react';
-// import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-// import HomeScreen from '../screens/home/HomeScreen';
-// import CartScreen from '../screens/cart/Cart';
-// import FavouriteScreen from '../screens/favourite/favouriteScreen';
-// import Ionicons from 'react-native-vector-icons/Ionicons';
+import React, {useState, useEffect} from 'react';
+import {View, ActivityIndicator, Text} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {AuthProvider} from '../auth/AuthProvider';
+import Routing from './Routing';
+import {NavigationContainer} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+// import {login, logout, selectUser} from '../../redux/slicer/userSlice';
+import {isLoading, userToken} from '../../redux/slicer/userSlice';
+import auth from '@react-native-firebase/auth';
+import AppStack from './AppStack';
 
-// const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-// const TabNavigator = () => {
-//   return (
-//     <Tab.Navigator
-//       screenOptions={({route}) => ({
-//         tabBarStyle: {backgroundColor: '#AD40AF'},
-//         tabBarIcon: ({focused, color, size}) => {
-//           let iconName;
+const AuthStack = () => {
+  const dispatch = useDispatch();
 
-//           if (route.name === 'HomeScreen') {
-//             iconName = focused ? 'home' : 'home-outline';
-//           } else if (route.name === 'CartScreen') {
-//             iconName = focused ? 'cart' : 'cart-outline';
-//           } else if (route.name === 'favouriteScreen') {
-//             iconName = focused ? 'star' : 'star-outline';
-//           }
+  const [isLoading, setIsLoading] = useState(true);
+  const [userToken, setUserToken] = useState(null);
 
-//           // You can return any component that you like here!
-//           return <Ionicons name={iconName} size={size} color={color} />;
-//         },
-//         tabBarInactiveTintColor: '#fff',
-//         tabBarActiveTintColor: 'yellow',
-//       })}>
-//       <Tab.Screen name="HomeScreen" component={HomeScreen} />
-//       //Cart Screen
-//       <Tab.Screen
-//         name="CartScreen"
-//         component={CartScreen}
-//         options={{
-//           tabBarBadge: 3,
-//         }}
-//       />
-//       //Favourite Screen
-//       <Tab.Screen name="favouriteScreen" component={FavouriteScreen} />
-//     </Tab.Navigator>
-//   );
-// };
+  useEffect(() => {
+    const loading = () => {
+      return (
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text
+            style={{
+              fontSize: 16,
+              color: 'red',
+              textAlign: 'center',
+              marginTop: 20,
+              fontFamily: 'Roboto-Medium',
+              fontWeight: 'bold',
+            }}>
+            {' '}
+            Please Wait App is Loading{' '}
+          </Text>
+        </View>
+      );
+    };
+  }, [1000]);
+  return (
+    <NavigationContainer>
+      {userToken ? <AppStack /> : <Routing />}
+    </NavigationContainer>
+  );
+};
 
-// export default TabNavigator;
+export default AuthStack;

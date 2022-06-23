@@ -5,10 +5,16 @@ import SignInScreen from '../screens/splash/SignInScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import SignUpScreen from '../screens/signUp/SignUpScreen';
 import CredentialsScreen from '../screens/forgetcredentials/CredentialsScreen';
-import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {AuthProvider} from '../auth/AuthProvider';
-
+import CartScreen from '../screens/cart/Cart';
+import ProductDetails from '../screens/productDetails/productDetails';
+import ProfileScreen from '../screens/profile/profileScreen';
+import EmailScreen from '../screens/email/emailScreen';
+import MessagesScreen from '../screens/messages/message';
+import SeeAll from '../screens/seeAll/seeAll';
+import AppStack from './AppStack';
+import {NavigationContainer} from '@react-navigation/native';
 const Stack = createNativeStackNavigator();
 
 const Routing = () => {
@@ -39,29 +45,27 @@ const Routing = () => {
     );
   }
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{headerShown: false}}
-        initialRouteName={'LandingScreen'}>
-        <Stack.Screen name="LandingScreen" component={LandingScreen} />
-        <Stack.Screen name="SignInScreen" component={SignInScreen} />
-        <Stack.Screen
-          name="HomeScreen"
-          component={HomeScreen}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="CredentialsScreen"
-          component={CredentialsScreen}
-          options={{headerShown: true}}
-        />
-        <Stack.Screen
-          name="SignUpScreen"
-          component={SignUpScreen}
-          options={{headerShown: true}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName={'LandingScreen'}>
+      <Stack.Screen name="LandingScreen" component={LandingScreen} />
+      <Stack.Screen name="SignInScreen" component={SignInScreen} />
+      <Stack.Screen
+        name="CredentialsScreen"
+        component={CredentialsScreen}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="SignUpScreen"
+        component={SignUpScreen}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{headerShown: true}}
+      />
+    </Stack.Navigator>
   );
 };
 

@@ -29,15 +29,24 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: '#fff',
         tabBarActiveTintColor: 'yellow',
       })}>
-      <Tab.Screen name="HomeScreen" component={HomeScreen} />
+      <Tab.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{headerShown: false}}
+      />
       <Tab.Screen
         name="CartScreen"
         component={CartScreen}
         options={{
+          headerShown: false,
           tabBarBadge: 3,
         }}
       />
-      <Tab.Screen name="favouriteScreen" component={FavouriteScreen} />
+      <Tab.Screen
+        name="favouriteScreen"
+        component={FavouriteScreen}
+        options={{headerShown: false}}
+      />
     </Tab.Navigator>
   );
 };
