@@ -140,7 +140,7 @@ const SignInScreen = ({navigation}) => {
         .signInWithEmailAndPassword(data.email, data.password)
         .then(() => {
           console.log('Sign in success');
-          navigation.navigate(goToHomePage);
+          navigation.navigate('Home');
         })
         .catch(error => {
           console.log(error);
