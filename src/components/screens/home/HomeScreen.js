@@ -56,7 +56,7 @@ function HomeScreen({navigation}) {
             }}>
             Hellow Ahsan Butt
           </Text>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
             <ImageBackground
               source={require('../../../../assets/Ahsan.jpg')}
               style={{width: 45, height: 45}}
@@ -130,11 +130,7 @@ function HomeScreen({navigation}) {
             <FlatList data={vegetablesList} renderItem={renderGroceryList} />
           )}
           {groceryTab === 2 && (
-            <FlatList
-              nestedScrollEnabled={true}
-              data={fruitesList}
-              renderItem={renderGroceryList}
-            />
+            <FlatList data={fruitesList} renderItem={renderGroceryList} />
           )}
         </View>
       </ScrollView>

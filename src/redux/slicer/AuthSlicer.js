@@ -1,81 +1,86 @@
-// import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import auth from '@react-native-firebase/auth';
+import {db} from '../../firebase/firebase';
 
-// const initialState = {
-//   email: null,
-//   token: null,
-//   id: null,
-// };
+const loginUser = createAsyncThunk(
+  'users/loginUser',
+  async ({email, password}) => {
+    try {
+      // console.log(email, password);
+      const user = await auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          console.log('success');
+        });
+      let userData = await db
+        .collection('users')
+        .where('userId', '==', user?.user?.uid)
+        .get();
+      let data = {};
+      userData.forEach(doc => {
+        data = {docId: doc.id, ...doc.data()};
+      });
+      // console.log('Congrats You are logged in', email);
+      return {user: data};
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      // thunkAPI.dispatch(setMessage(message));
+      console.log(message);
+    }
+  },
+);
 
-// const AuthSlice = createSlice({
-//   name: 'auth',
-//   initialState,
-//   reducers: {
-//     setUser(state, action) {
-//       state.email = action.payload.email;
-//       state.token = action.payload.token;
-//       state.id = action.payload.id;
-//     },
-//     removeUser(state) {
-//       state.email = null;
-//       state.token = null;
-//       state.id = null;
-//     },
-//   },
-// });
+const logoutUser = createAsyncThunk('users/logoutUser', async () => {
+  try {
+    console.log(' Action Now logout');
+    await auth().signOut();
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-// export const {setUser, removeUser} = AuthSlice.actions;
-// export default AuthSlice.reducer;
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: {
+    user: {},
+    isLogin: false,
+    token: null,
+    loading: false,
+  },
+  reducers: {},
+  extraReducers: builder => {
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      // console.log('do login action', action);
 
-// import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+      state.user = action.payload;
+      state.isLogin = true;
+    });
+    builder.addCase(logoutUser.fulfilled, (state, action) => {
+      console.log('do logout action Reducer', action);
 
-// const fetchUserById = createAsyncThunk(
-//   'users/fetchByIdStatus',
-//   async userId => {
-//     const response = await userAPI.fetchById(userId);
-//     return response.data;
-//   },
-// );
+      state.user = null;
+      state.isLogin = false;
+    });
+    builder.addCase(logoutUser.rejected, (state, action) => {
+      console.log('do logout action Reducer', action);
+      state.error = action.error;
+    });
+  },
+});
 
-// const AuthSlice = createSlice({
-//   name: 'userAuth',
-//   initialState: {
-//     user: null,
-//     userData: {},
-//     newUser: '',
-//     currentUser: '',
-//   },
-//   reducers: {
-//     login: (state, action) => {
-//       state.user = action.payload;
-//     },
+export {loginUser};
+export default authSlice.reducer;
 
-//     logout: state => {
-//       state.user = null;
-//     },
-//     userData: (state, action) => {
-//       state.userData = action.payload;
-//     },
-//     registerUser: (state, action) => {
-//       state.newUser = action.payload;
-//     },
-//     currentUser: (state, action) => {
-//       state.currentUser = action.payload;
-//     },
-//     extraReducers: builder => {
-//       builder.addCase(fetchUserById.fulfilled, (state, action) => {
-//         state.users = action.payload;
-//       });
-//     },
-//   },
-// });
+// export const selectIsLogin = state => state.auth.isLogin;
+// export const selectUser = state => state.auth.user;
+// export const selectUserData = state => state.auth.userData;
+// export const selectNewUser = state => state.auth.newUser;
+// export const selectCurrentUser = state => state.auth.currentUser;
 
-// export {fetchUserById};
-// export default AuthSlice.reducer;
-
-// export const selectUser = state => state.user.user;
-// export const selectUserData = state => state.user.userData;
-// export const selectNewUser = state => state.user.newUser;
-// export const selectCurrentUser = state => state.user.currentUser;
-
-// export const {login, logout, userData, registerUser, currentUser} =
-//   AuthSlice.actions;
+export const {login, logout, userData, registerUser, currentUser, isLogin} =
+  authSlice.actions;

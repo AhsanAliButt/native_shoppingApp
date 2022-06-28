@@ -1,20 +1,21 @@
-import 'react-native-gesture-handler';
-import React from 'react';
-import Routing from './components/Routing/Routing';
-import DrawerScreen from './components/screens/Drawer/DrawerScreen';
-import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import {useAnimatedStyle, useSharedValue} from 'react-native-reanimated';
+// export const handleSignIn = ({email, password, navigation}) => {
+//   auth()
+//     .signInWithEmailAndPassword(email, password)
+//     .then(() => {
+//       return navigation.navigate('Home');
+//     })
+//     .catch(error => {
+//       console.log(error);
+//     });
+// };
 
-const Drawer = createDrawerNavigator();
-
-const App = () => {
-  return (
-    <NavigationContainer>
-      <Drawer.Navigator
-        DrawerScreen={props => <DrawerScreen {...props} />}></Drawer.Navigator>
-    </NavigationContainer>
-  );
-};
-
-export default App;
+// export const handleSignOut = ({navigation}) => {
+//     auth()
+//       .signOut()
+//       .then(() => {
+//         return navigation.navigate('SignIn');
+//       })
+//       .catch(error => {
+//         console.log(error);
+//       });
+//   };

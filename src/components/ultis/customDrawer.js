@@ -15,8 +15,10 @@ import {
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import useSignIn from '../../../src/components/screens/splash/useAuth';
 
 const CustomDrawer = props => {
+  const {signOutHandler} = useSignIn();
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView
@@ -87,7 +89,9 @@ const CustomDrawer = props => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}} style={{paddingVertical: 15}}>
+        <TouchableOpacity
+          onPress={() => signOutHandler()}
+          style={{paddingVertical: 15}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <Ionicons name="exit-outline" size={22} />
             <Text

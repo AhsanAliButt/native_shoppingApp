@@ -18,15 +18,12 @@ import * as Animatable from 'react-native-animatable';
 import validators from '../../ultis/Validator';
 import {useState, useContext} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {goToHomePage} from '../../constants/consttant';
-import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
-import {login, logout} from '../../redux/slicer/userSlice';
-import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
-// import {onAuthSign} from '../../../redux/hooks/userAuth';
+import useSignIn from './useAuth';
 
 const SignInScreen = ({navigation}) => {
-  // const dispatch = useDispatch();
+  const {loginHandler} = useSignIn();
+  const dispatch = useDispatch();
 
   const [data, setData] = useState({
     email: '',
@@ -120,7 +117,7 @@ const SignInScreen = ({navigation}) => {
         isValidPassword: true,
       });
     } else {
-      if (val.trim.length >= 8) {
+      if (val.trim.length >= 6) {
         setData({
           ...data,
           isValidPassword: true,
@@ -133,21 +130,10 @@ const SignInScreen = ({navigation}) => {
       }
     }
   };
-
-  const onSignIn = val => {
-    try {
-      auth()
-        .signInWithEmailAndPassword(data.email, data.password)
-        .then(() => {
-          console.log('Sign in success');
-          navigation.navigate('Home');
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+  const email = data.email;
+  const password = data.password;
+  const onSignIn = () => {
+    handleSignIn({email, password, navigation});
   };
 
   return (
@@ -259,7 +245,7 @@ const SignInScreen = ({navigation}) => {
         <View style={[styles.button, {marginTop: 50}]}>
           <TouchableOpacity
             style={styles.signIn}
-            onPress={() => onSignIn(data.email, data.password)}>
+            onPress={() => loginHandler(email, password, navigation)}>
             <LinearGradient
               colors={['#08d4c4', '#01ab9d']}
               style={styles.signIn}>
@@ -273,5 +259,3 @@ const SignInScreen = ({navigation}) => {
 };
 
 export default SignInScreen;
-
-// goToHomePage({navigation});

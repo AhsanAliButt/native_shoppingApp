@@ -15,6 +15,7 @@ const userSlice = createSlice({
     userData: {},
     newUser: '',
     currentUser: '',
+    isLogin: false,
   },
   reducers: {
     login: (state, action) => {
@@ -51,26 +52,3 @@ export const selectCurrentUser = state => state.user.currentUser;
 
 export const {login, logout, userData, registerUser, currentUser} =
   userSlice.actions;
-
-// import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-
-// const userSlice = createSlice({
-//     name: "user",
-//     initialState: {
-//         email: null,
-//         token: null,
-//         id: null,
-//         isLogin: false,
-//     },
-//     reducers: {
-//         login: (state, action) => {
-//             state.user = action.payload;
-//         }
-//     }, });
-
-// export const { login, logout } = userSlice.actions;
-
-// // selectors
-// export const selectUser = (state) => state.user.user;
-
-// export default userSlice.reducer;
