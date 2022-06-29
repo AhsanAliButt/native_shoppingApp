@@ -1,12 +1,20 @@
 import {Text, View, Dimensions, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import styles from './LandingStyle';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as Animatable from 'react-native-animatable';
+import {useDispatch} from 'react-redux';
+import {checkUser} from '../../../redux/slicer/AuthSlicer';
+import {useNavigation} from '@react-navigation/native';
 
 const LandingScreen = ({navigation}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigation();
+  useEffect(() => {
+    dispatch(checkUser(navigate));
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

@@ -1,6 +1,7 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 import {db} from '../../firebase/firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const loginUser = createAsyncThunk(
   'users/loginUser',
@@ -19,6 +20,7 @@ const loginUser = createAsyncThunk(
       let data = {};
       userData.forEach(doc => {
         data = {docId: doc.id, ...doc.data()};
+        console.log(data);
       });
       // console.log('Congrats You are logged in', email);
       return {user: data};
@@ -35,12 +37,37 @@ const loginUser = createAsyncThunk(
   },
 );
 
-const logoutUser = createAsyncThunk('users/logoutUser', async () => {
+const checkUser = createAsyncThunk('users/checkUser', async navigation => {
   try {
-    console.log(' Action Now logout');
+    const user = auth().currentUser;
+    // console.log(user);
+
+    if (!user) {
+      navigation.navigate('SignInScreen');
+      return;
+    }
+    // console.log('user', user);
+    let userData = await db
+      .collection('users')
+      .where('userId', '==', user?.user?.uid)
+      .get();
+    let data = {};
+    userData.forEach(doc => {
+      data = {docId: doc.id, ...doc.data()};
+    });
+
+    return {user: data};
+  } catch (error) {
+    navigation.navigate('SignInScreen');
+    console.log(error);
+  }
+});
+
+const signOut = createAsyncThunk('users/signOut', async () => {
+  try {
     await auth().signOut();
   } catch (error) {
-    console.log(error);
+    console.log('What Went Wrong ', error);
   }
 });
 
@@ -48,11 +75,20 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: {},
-    isLogin: false,
+    isLogin: AsyncStorage.getItem('isLogin') === 'ture' ? true : false,
     token: null,
     loading: false,
+    userData: {},
   },
-  reducers: {},
+  reducers: {
+    setIsLogin: (state, action) => {
+      state.isLogin = action.payload;
+      AsyncStorage.setItem('isLogin', action.payload);
+    },
+    setUserData: (state, action) => {
+      state.userData = action.payload;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(loginUser.fulfilled, (state, action) => {
       // console.log('do login action', action);
@@ -60,20 +96,19 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isLogin = true;
     });
-    builder.addCase(logoutUser.fulfilled, (state, action) => {
-      console.log('do logout action Reducer', action);
+    builder.addCase(signOut.fulfilled, (state, action) => {
+      console.log('signOut Successfull', action);
 
       state.user = null;
       state.isLogin = false;
     });
-    builder.addCase(logoutUser.rejected, (state, action) => {
-      console.log('do logout action Reducer', action);
-      state.error = action.error;
+    builder.addCase(signOut.rejected, (state, action) => {
+      console.log('LogOut Rejected', action);
     });
   },
 });
 
-export {loginUser};
+export {loginUser, signOut, checkUser};
 export default authSlice.reducer;
 
 // export const selectIsLogin = state => state.auth.isLogin;
@@ -82,5 +117,4 @@ export default authSlice.reducer;
 // export const selectNewUser = state => state.auth.newUser;
 // export const selectCurrentUser = state => state.auth.currentUser;
 
-export const {login, logout, userData, registerUser, currentUser, isLogin} =
-  authSlice.actions;
+export const {setIsLogin, setUserData} = authSlice.actions;

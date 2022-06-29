@@ -1,11 +1,12 @@
 import {LogBox} from 'react-native';
-import React from 'react';
-import Routing from './src/components/Routing/Routing';
-import {Provider} from 'react-redux';
+import React, {useEffect} from 'react';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {Provider, useSelector} from 'react-redux';
 import store from './src/redux/store/store';
-import AppStack from './src/components/Routing/AppStack';
 import AuthStack from './src/components/Routing/AuthStack';
 import {NavigationContainer} from '@react-navigation/native';
+import {setIsLogin, setUserData} from './src/redux/slicer/AuthSlicer';
+import {useDispatch} from 'react-redux';
 
 LogBox.ignoreLogs([
   'ViewPropTypes will be removed',
@@ -13,6 +14,20 @@ LogBox.ignoreLogs([
 ]);
 
 const App = () => {
+  const user = useSelector(state => state.auth.user); // get user from store
+  console.log('user App.js', user);
+  const dispatch = useDispatch(); // useDispatch hook
+  useEffect(() => {
+    auth().onAuthStateChanged(user => {
+      if (user) {
+        dispatch(setIsLogin(true));
+        dispatch(setUserData(user));
+      } else {
+        dispatch(setIsLogin(false));
+        dispatch(setUserData({}));
+      }
+    });
+  }, []);
   return (
     <>
       <AuthStack />
