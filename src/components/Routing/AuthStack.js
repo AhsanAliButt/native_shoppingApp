@@ -12,7 +12,7 @@ const AuthStack = () => {
   const dispatch = useDispatch();
   const isLogin = useSelector(state => state.auth.isLogin);
 
-  console.log({isLogin});
+  // console.log({isLogin});
 
   const [isLoading, setIsLoading] = useState(true);
   const [userToken, setUserToken] = useState(null);

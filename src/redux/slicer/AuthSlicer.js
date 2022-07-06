@@ -2,6 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 import {db} from '../../firebase/firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {AppRegistry} from 'react-native';
 
 const loginUser = createAsyncThunk(
   'users/loginUser',
@@ -24,6 +25,68 @@ const loginUser = createAsyncThunk(
       });
       // console.log('Congrats You are logged in', email);
       return {user: data};
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      // thunkAPI.dispatch(setMessage(message));
+      console.log(message);
+    }
+  },
+);
+
+const collectionRef = db.collection('users');
+
+const signUpUser = createAsyncThunk(
+  'users/loginUser',
+  async ({email, password}) => {
+    try {
+      console.log(email, password);
+      const user = await auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          console.log('success');
+          const result = db.collection('users').add({
+            ...user,
+            email,
+            createdAt: new Date(),
+          });
+          console.log('Add user in Users', result);
+        });
+      //   .then(() => {
+      //     const data = addDoc(
+      //       collectionRef,
+      //       'userId',
+      //       'email',
+      //       'name',
+      //       'phone',
+      //       'address',
+      //       'city',
+      //       'state',
+      //       'zip',
+      //       'country',
+      //       'age',
+      //       'rank',
+      //       'job',
+      //     );
+      //     const localData = {...user, uid: data.id};
+      //     return localData;
+      //     console.log('Congrats You are logged in', localData);
+      //   });
+      // let userData = await db
+      //   .collection('users')
+      //   .where('userId', '==', user?.user?.uid)
+      //   .get();
+      // let data = {};
+      // userData.forEach(doc => {
+      //   data = {docId: doc.id, ...doc.data()};
+      //   console.log(data);
+      // });
+      // // console.log('Congrats You are logged in', email);
+      // return {user: data};
     } catch (error) {
       const message =
         (error.response &&
@@ -75,7 +138,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: {},
-    isLogin: AsyncStorage.getItem('isLogin') === 'ture' ? true : false,
+    isLogin: AsyncStorage.getItem('isLogin').then() === 'ture' ? true : false,
     token: null,
     loading: false,
     userData: {},
@@ -83,7 +146,7 @@ const authSlice = createSlice({
   reducers: {
     setIsLogin: (state, action) => {
       state.isLogin = action.payload;
-      AsyncStorage.setItem('isLogin', action.payload);
+      AsyncStorage.setItem(JSON.stringify('isLogin', action.payload));
     },
     setUserData: (state, action) => {
       state.userData = action.payload;
@@ -101,14 +164,22 @@ const authSlice = createSlice({
 
       state.user = null;
       state.isLogin = false;
+      AsyncStorage.setItem('isLogin', action.payload);
     });
     builder.addCase(signOut.rejected, (state, action) => {
       console.log('LogOut Rejected', action);
     });
+    builder.addCase(checkUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+    });
+    builder.addCase(checkUser.rejected, (state, action) => {
+      state.user = null;
+      state.isLogin = false;
+    });
   },
 });
 
-export {loginUser, signOut, checkUser};
+export {loginUser, signOut, checkUser, signUpUser};
 export default authSlice.reducer;
 
 // export const selectIsLogin = state => state.auth.isLogin;

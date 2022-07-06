@@ -31,3 +31,19 @@ const register = (email, password) => {
     }
   };
 };
+
+// Fetch Data from FireStore
+
+const createUser = user => {
+  return async dispatch => {
+    try {
+      const result = await db.collection('users').add({
+        ...user,
+        createdAt: new Date(),
+      });
+      dispatch(setUser(result.user));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

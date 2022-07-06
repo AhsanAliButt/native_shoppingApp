@@ -7,6 +7,7 @@ import SignUpScreen from '../screens/signUp/SignUpScreen';
 import CredentialsScreen from '../screens/forgetcredentials/CredentialsScreen';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer} from '@react-navigation/native';
+import userDetails from '../screens/userDetails/userDetails';
 const Stack = createNativeStackNavigator();
 
 const Routing = () => {
@@ -54,6 +55,11 @@ const Routing = () => {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
+        options={{headerShown: true}}
+      />
+      <Stack.Screen
+        name="userDetails"
+        component={userDetails}
         options={{headerShown: true}}
       />
     </Stack.Navigator>

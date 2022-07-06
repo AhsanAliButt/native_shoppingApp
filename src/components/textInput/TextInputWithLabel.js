@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {TextInput} from 'react-native';
 import styles from './styles';
@@ -25,16 +25,18 @@ const TextInputWithLabel = ({
         }}>
         {label}
       </Text>
-      <TextInput
-        value={value}
-        placeholder={placeHolder}
-        onChangeText={onChangeText}
-        multiline={multiline}
-        onFocus={onFocus}
-        style={style}
-        placeholderTextColor="black"
-        {...props}
-      />
+      <TouchableOpacity>
+        <TextInput
+          value={value}
+          placeholder={placeHolder}
+          onChangeText={onChangeText}
+          multiline={multiline}
+          onFocus={onFocus}
+          style={style}
+          placeholderTextColor="black"
+          {...props}
+        />
+      </TouchableOpacity>
     </View>
   );
 };

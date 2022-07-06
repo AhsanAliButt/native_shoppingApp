@@ -132,9 +132,6 @@ const SignInScreen = ({navigation}) => {
   };
   const email = data.email;
   const password = data.password;
-  const onSignIn = () => {
-    handleSignIn({email, password, navigation});
-  };
 
   return (
     <View style={styles.container}>

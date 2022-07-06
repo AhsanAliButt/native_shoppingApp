@@ -7,6 +7,9 @@ import AuthStack from './src/components/Routing/AuthStack';
 import {NavigationContainer} from '@react-navigation/native';
 import {setIsLogin, setUserData} from './src/redux/slicer/AuthSlicer';
 import {useDispatch} from 'react-redux';
+import {Platform, ViewPropTypes} from 'react-native';
+import UserDetails from './src/components/screens/userDetails/userDetails';
+// import {NavigationContainer} from '@react-navigation/native';
 
 LogBox.ignoreLogs([
   'ViewPropTypes will be removed',
@@ -30,7 +33,10 @@ const App = () => {
   }, []);
   return (
     <>
-      <AuthStack />
+      <NavigationContainer>
+        {/* <AuthStack /> */}
+        <UserDetails />
+      </NavigationContainer>
     </>
   );
 };
