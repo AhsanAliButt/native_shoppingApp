@@ -22,34 +22,20 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import useSignIn from '../../screens/splash/useAuth';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
+import DatePicker from 'react-native-date-picker';
+import RadioForm, {
+  RadioButton,
+  RadioButtonInput,
+  RadioButtonLabel,
+} from 'react-native-simple-radio-button';
 
 const UserDetails = ({navigation}) => {
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [toggleCheckBox1, setToggleCheckBox1] = useState(false);
-  const [toggleCheckBox2, setToggleCheckBox2] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
-  // const [date, setDate] = useState(new Date(1598051730000));
-  // const [mode, setMode] = useState('date');
-  // const [show, setShow] = useState(false);
+  const currentDate = date.toLocaleDateString();
 
-  // const onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate;
-  //   setShow(false);
-  //   setDate(currentDate);
-  // };
-
-  // const showMode = currentMode => {
-  //   setShow(true);
-  //   setMode(currentMode);
-  // };
-
-  // const showDatepicker = () => {
-  //   showMode('date');
-  // };
-
-  // const showTimepicker = () => {
-  //   showMode('time');
-  // };
+  console.log(currentDate);
 
   const {registerHandler} = useSignIn();
   // const dispatch = useDispatch();
@@ -193,6 +179,12 @@ const UserDetails = ({navigation}) => {
   const email = data.email;
   const password = data.password;
 
+  const radio_props = [
+    {label: 'Male  ', value: 'Male'},
+    {label: 'Female  ', value: 'Female'},
+    {label: 'Other  ', value: 'Other'},
+  ];
+
   // const handleSubmit = () => {
   //   if (
   //     data.email.trim().length >= 4 &&
@@ -216,52 +208,83 @@ const UserDetails = ({navigation}) => {
     }
   };
 
+  const handleLastName = val => {
+    const result = val.replace(/[^a-z]/gi, '');
+    console.log(result);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="#009387" barStyle="light-content" />
-      {/* <View>
-        <View>
-          <Button onPress={showDatepicker} title="Show date picker!" />
-        </View>
-        <View>
-          <Button onPress={showTimepicker} title="Show time picker!" />
-        </View>
-        <Text>selected: {date.toLocaleString()}</Text>
-        {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={mode}
-            is24Hour={true}
-            onChange={onChange}
-          />
-        )}
-      </View> */}
-
       <View style={styles.header}>
         <Text style={styles.text_header}> Enter Your Details !</Text>
       </View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.text_footer}> FirstName </Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter your first name"
-            style={styles.textInput}
-            autoCapitalize="none"
-            onChangeText={val => textInputChange(val)}
-          />
-        </View>
-        <Text style={[styles.text_footer, {marginTop: 35}]}> LastName </Text>
-        <View style={styles.action}>
-          <TextInput
-            placeholder="Enter your last name"
-            style={styles.textInput}
-            autoCapitalize="none"
-            onChangeText={val => handlePasswordChange(val)}
-          />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <View>
+            <Text style={styles.text_footer}> FirstName </Text>
+            <View
+              style={[
+                styles.action,
+                {
+                  borderBottomColor: '#009387',
+                  borderBottomWidth: 1,
+                  width: 150,
+                },
+              ]}>
+              <TextInput
+                placeholder="Enter your first name"
+                maxLength={10}
+                type="text"
+                style={styles.textInput}
+                autoCapitalize="none"
+                onChangeText={val => textInputChange(val)}
+              />
+            </View>
+          </View>
+          <View>
+            <Text style={styles.text_footer}> LastName </Text>
+            <View
+              style={[
+                styles.action,
+                {
+                  borderBottomColor: '#009387',
+                  borderBottomWidth: 1,
+                  width: 150,
+                },
+              ]}>
+              <TextInput
+                placeholder="Enter your last name"
+                keyboardType="number-pad"
+                style={styles.textInput}
+                maxLength={10}
+                autoCapitalize="none"
+                onChangeText={val => handleLastName(val)}
+              />
+            </View>
+          </View>
         </View>
         <Text style={[styles.text_footer, {marginTop: 35}]}>Gender</Text>
         <View style={styles.action}>
+          <RadioForm
+            radio_props={radio_props}
+            initial={0}
+            formHorizontal={true}
+            buttonSize={8}
+            // labelHorizontal={true}
+            buttonColor={'#2196f3'}
+            animation={true}
+            onPress={value => {
+              console.log(value);
+            }}
+          />
+        </View>
+        {/* <View style={styles.action}>
           <CheckBox
             disabled={false}
             value={toggleCheckBox}
@@ -272,10 +295,58 @@ const UserDetails = ({navigation}) => {
             value={toggleCheckBox2}
             onValueChange={newValue => setToggleCheckBox2(newValue)}
           />
-        </View>
+          <CheckBox value={true} />
+          <CheckBox value={false} />
+        </View> */}
+
         <Text style={[styles.text_footer, {marginTop: 35}]}> Age</Text>
         <View style={styles.action}>
-          <Text> Age </Text>
+          <TouchableOpacity onPress={() => setOpen(true)}>
+            <Text style={styles.text1}> {currentDate} </Text>
+          </TouchableOpacity>
+          <DatePicker
+            modal
+            style={styles.datePickerStyle}
+            mode="date"
+            placeholder="Select date"
+            format="DD/MM/YYYY"
+            minDate="01-01-1900"
+            maxDate="01-01-2020"
+            open={open}
+            date={date}
+            androidVariant="iosClone"
+            customStyles={{
+              dateIcon: {
+                position: 'absolute',
+                right: -5,
+                top: 4,
+                marginLeft: 0,
+              },
+              dateInput: {
+                borderColor: 'gray',
+                alignItems: 'flex-start',
+                borderWidth: 0,
+                borderBottomWidth: 1,
+              },
+              placeholderText: {
+                fontSize: 17,
+                color: 'gray',
+              },
+              dateText: {
+                fontSize: 17,
+              },
+            }}
+            onConfirm={date => {
+              setOpen(false);
+              setDate(date);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+            onDateChange={date => {
+              setDate(date);
+            }}
+          />
         </View>
         <Text style={[styles.text_footer, {marginTop: 35}]}> Country </Text>
         <RNPickerSelect
@@ -302,7 +373,6 @@ const UserDetails = ({navigation}) => {
             {label: 'Football', value: 'football'},
           ]}
         />
-        <View style={styles.action}></View>
 
         <View style={[styles.button, {marginTop: 50}]}>
           <TouchableOpacity
@@ -321,5 +391,3 @@ const UserDetails = ({navigation}) => {
 };
 
 export default UserDetails;
-
-// Write a function which uncheck the checkbox when the user clicks on another checkbox

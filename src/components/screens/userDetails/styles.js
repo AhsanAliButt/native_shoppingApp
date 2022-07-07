@@ -72,6 +72,27 @@ const styles = StyleSheet.create({
     borderBottomColor: '#f2f2f2',
     paddingBottom: 5,
   },
+  container1: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#A8E9CA',
+  },
+  title1: {
+    textAlign: 'left',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  datePickerStyle: {
+    width: 230,
+  },
+  text1: {
+    textAlign: 'left',
+    width: 230,
+    fontSize: 16,
+    color: '#000',
+  },
 });
 
 export default styles;
