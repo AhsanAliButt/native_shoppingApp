@@ -24,6 +24,7 @@ const SignUpScreen = ({navigation}) => {
   const [data, setData] = useState({
     email: '',
     password: '',
+    username: '',
     confirm_password: '',
     check_textInputChange: false,
     secureTextEntry: true,
@@ -156,9 +157,25 @@ const SignUpScreen = ({navigation}) => {
       confirm_secureTextEntry: !data.confirm_secureTextEntry,
     });
   };
+  const handleUsername = val => {
+    if (val.trim().length >= 4) {
+      setData({
+        ...data,
+        username: val,
+        isValidUser: true,
+      });
+    } else {
+      setData({
+        ...data,
+        username: val,
+        isValidUser: false,
+      });
+    }
+  };
 
   const email = data.email;
   const password = data.password;
+  const name = data.username;
 
   return (
     <View style={styles.container}>
@@ -167,7 +184,17 @@ const SignUpScreen = ({navigation}) => {
         <Text style={styles.text_header}> SignUp for More Services !</Text>
       </View>
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <Text style={styles.text_footer}> Email </Text>
+        <Text style={styles.text_footer}> Username </Text>
+        <View style={styles.action}>
+          <FontAwesome name="user-o" color="#05375a" size={20} />
+          <TextInput
+            placeholder="Enter Your Email"
+            style={styles.textInput}
+            autoCapitalize="none"
+            onChangeText={val => handleUsername(val)}
+          />
+        </View>
+        <Text style={[styles.text_footer, {marginTop: 35}]}> Email </Text>
         <View style={styles.action}>
           <FontAwesome name="user-o" color="#05375a" size={20} />
           <TextInput
@@ -232,7 +259,7 @@ const SignUpScreen = ({navigation}) => {
         <View style={[styles.button, {marginTop: 50}]}>
           <TouchableOpacity
             style={styles.signIn}
-            onPress={() => registerHandler(email, password)}>
+            onPress={() => registerHandler(name, email, password)}>
             <LinearGradient
               colors={['#08d4c4', '#01ab9d']}
               style={styles.signIn}>

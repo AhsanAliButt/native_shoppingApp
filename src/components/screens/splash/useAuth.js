@@ -5,6 +5,8 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {useState} from 'react';
 import {loginUser, signOut, signUpUser} from '../../../redux/slicer/AuthSlicer';
+import {useEffect} from 'react';
+import ImagePicker from 'react-native-image-crop-picker';
 
 export default useSignIn = (email, password) => {
   const navigation = useNavigation();
@@ -20,7 +22,23 @@ export default useSignIn = (email, password) => {
     secretQuestion: '',
     secretAnswer: '',
     recoverEmail: '',
+    filePath: null,
+    countryCode: '',
+    country: '',
+    mobile: '',
   });
+  useEffect(() => {
+    console.log(userDetails);
+  }, [userDetails]);
+
+  const filePath = userDetails.filePath;
+  const dateOfBirth = userDetails.dateOfBirth;
+  const firstName = userDetails.firstName;
+  const lastName = userDetails.lastName;
+  const gender = userDetails.gender;
+  const country = userDetails.country;
+  const countryCode = userDetails.countryCode;
+  const mobile = userDetails.mobile;
 
   const loginHandler = async (email, password) => {
     let user = {
@@ -35,25 +53,72 @@ export default useSignIn = (email, password) => {
     console.log('dispatched done');
   };
 
-  const registerHandler = async (email, password) => {
-    console.log('registerHandler', email, password);
+  const registerHandler = async (username, email, password) => {
+    console.log('emai =>', email, 'Password', password, 'username', username);
     if (email.length < 4 || password.length < 8) {
       alert('Please enter a valid email and password');
     } else {
-      let userDetails = {
-        email,
-        password,
-      };
+      setUserDetails({
+        email: email,
+        password: password,
+        username: username,
+      });
       navigation.navigate('userDetails');
     }
-    dispatch(signUpUser(userDetails));
+    // dispatch(signUpUser(userDetails));
   };
 
   const userDetailsHandler = async () => {
     console.log('userDetailsHandler');
   };
 
-  return {loginHandler, signOutHandler, registerHandler};
+  const countryCodeHandler = async (countryCode, country) => {
+    setUserDetails({
+      ...userDetails,
+      countryCode: countryCode,
+      country: country,
+    });
+  };
+  const phoneHandler = async phone => {
+    setUserDetails({
+      ...userDetails,
+      phone: phone,
+    });
+  };
+
+  const imagePathHandler = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setUserDetails({
+          filePath: image.path,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .done();
+  };
+
+  return {
+    imagePathHandler,
+    loginHandler,
+    signOutHandler,
+    registerHandler,
+    setUserDetails,
+    userDetailsHandler,
+    filePath,
+    dateOfBirth,
+    firstName,
+    lastName,
+    gender,
+    countryCodeHandler,
+    phoneHandler,
+  };
 };
 
 // Write a Programe get UserDetails from singup screen "Done"

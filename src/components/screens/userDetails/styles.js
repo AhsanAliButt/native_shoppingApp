@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingVertical: 20,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   title: {
     color: '#05375a',

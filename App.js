@@ -33,10 +33,10 @@ const App = () => {
   }, []);
   return (
     <>
-      <NavigationContainer>
-        {/* <AuthStack /> */}
-        <UserDetails />
-      </NavigationContainer>
+      {/* <NavigationContainer> */}
+      <AuthStack />
+      {/* <UserDetails />
+      </NavigationContainer> */}
     </>
   );
 };

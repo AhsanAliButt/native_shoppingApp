@@ -5,6 +5,7 @@ import {
   View,
   Platform,
   StatusBar,
+  ScrollView,
   Dimensions,
   Button,
 } from 'react-native';
@@ -23,11 +24,14 @@ import useSignIn from '../../screens/splash/useAuth';
 import CheckBox from '@react-native-community/checkbox';
 import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker';
+import Foundation from 'react-native-vector-icons/Foundation';
 import RadioForm, {
   RadioButton,
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
+import CountrySelector from './components/countryPicker';
+import UploadImage from './components/imagePicker';
 
 const UserDetails = ({navigation}) => {
   const [date, setDate] = useState(new Date());
@@ -219,72 +223,74 @@ const UserDetails = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.text_header}> Enter Your Details !</Text>
       </View>
+
       <Animatable.View style={styles.footer} animation="fadeInUpBig">
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <View>
-            <Text style={styles.text_footer}> FirstName </Text>
-            <View
-              style={[
-                styles.action,
-                {
-                  borderBottomColor: '#009387',
-                  borderBottomWidth: 1,
-                  width: 150,
-                },
-              ]}>
-              <TextInput
-                placeholder="Enter your first name"
-                maxLength={10}
-                type="text"
-                style={styles.textInput}
-                autoCapitalize="none"
-                onChangeText={val => textInputChange(val)}
-              />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View>
+              <Text style={styles.text_footer}> FirstName </Text>
+              <View
+                style={[
+                  styles.action,
+                  {
+                    borderBottomColor: '#009387',
+                    borderBottomWidth: 1,
+                    width: 150,
+                  },
+                ]}>
+                <TextInput
+                  placeholder="Enter your first name"
+                  maxLength={10}
+                  type="text"
+                  style={styles.textInput}
+                  autoCapitalize="none"
+                  onChangeText={val => textInputChange(val)}
+                />
+              </View>
+            </View>
+            <View>
+              <Text style={styles.text_footer}> LastName </Text>
+              <View
+                style={[
+                  styles.action,
+                  {
+                    borderBottomColor: '#009387',
+                    borderBottomWidth: 1,
+                    width: 150,
+                  },
+                ]}>
+                <TextInput
+                  placeholder="Enter your last name"
+                  keyboardType="number-pad"
+                  style={styles.textInput}
+                  maxLength={10}
+                  autoCapitalize="none"
+                  onChangeText={val => handleLastName(val)}
+                />
+              </View>
             </View>
           </View>
-          <View>
-            <Text style={styles.text_footer}> LastName </Text>
-            <View
-              style={[
-                styles.action,
-                {
-                  borderBottomColor: '#009387',
-                  borderBottomWidth: 1,
-                  width: 150,
-                },
-              ]}>
-              <TextInput
-                placeholder="Enter your last name"
-                keyboardType="number-pad"
-                style={styles.textInput}
-                maxLength={10}
-                autoCapitalize="none"
-                onChangeText={val => handleLastName(val)}
-              />
-            </View>
+          <Text style={[styles.text_footer, {marginTop: 20}]}>Gender</Text>
+          <View style={styles.action}>
+            <RadioForm
+              radio_props={radio_props}
+              initial={0}
+              formHorizontal={true}
+              buttonSize={8}
+              // labelHorizontal={true}
+              buttonColor={'#2196f3'}
+              animation={true}
+              onPress={value => {
+                console.log(value);
+              }}
+            />
           </View>
-        </View>
-        <Text style={[styles.text_footer, {marginTop: 35}]}>Gender</Text>
-        <View style={styles.action}>
-          <RadioForm
-            radio_props={radio_props}
-            initial={0}
-            formHorizontal={true}
-            buttonSize={8}
-            // labelHorizontal={true}
-            buttonColor={'#2196f3'}
-            animation={true}
-            onPress={value => {
-              console.log(value);
-            }}
-          />
-        </View>
-        {/* <View style={styles.action}>
+          {/* <View style={styles.action}>
           <CheckBox
             disabled={false}
             value={toggleCheckBox}
@@ -299,57 +305,70 @@ const UserDetails = ({navigation}) => {
           <CheckBox value={false} />
         </View> */}
 
-        <Text style={[styles.text_footer, {marginTop: 35}]}> Age</Text>
-        <View style={styles.action}>
-          <TouchableOpacity onPress={() => setOpen(true)}>
-            <Text style={styles.text1}> {currentDate} </Text>
-          </TouchableOpacity>
-          <DatePicker
-            modal
-            style={styles.datePickerStyle}
-            mode="date"
-            placeholder="Select date"
-            format="DD/MM/YYYY"
-            minDate="01-01-1900"
-            maxDate="01-01-2020"
-            open={open}
-            date={date}
-            androidVariant="iosClone"
-            customStyles={{
-              dateIcon: {
-                position: 'absolute',
-                right: -5,
-                top: 4,
-                marginLeft: 0,
-              },
-              dateInput: {
-                borderColor: 'gray',
-                alignItems: 'flex-start',
-                borderWidth: 0,
-                borderBottomWidth: 1,
-              },
-              placeholderText: {
-                fontSize: 17,
-                color: 'gray',
-              },
-              dateText: {
-                fontSize: 17,
-              },
-            }}
-            onConfirm={date => {
-              setOpen(false);
-              setDate(date);
-            }}
-            onCancel={() => {
-              setOpen(false);
-            }}
-            onDateChange={date => {
-              setDate(date);
-            }}
-          />
-        </View>
-        <Text style={[styles.text_footer, {marginTop: 35}]}> Country </Text>
-        <RNPickerSelect
+          <Text style={[styles.text_footer, {marginTop: 20}]}> Age</Text>
+          <View
+            style={{
+              marginTop: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: '#f2f2f2',
+              paddingBottom: 5,
+            }}>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <View>
+                <Text style={styles.text1}> {currentDate} </Text>
+              </View>
+              <TouchableOpacity onPress={() => setOpen(true)}>
+                <Foundation name="calendar" size={20} color="#2196f3" />
+              </TouchableOpacity>
+            </View>
+            <DatePicker
+              modal
+              style={styles.datePickerStyle}
+              mode="date"
+              placeholder="Select date"
+              format="DD/MM/YYYY"
+              minDate="01-01-1900"
+              maxDate="01-01-2020"
+              open={open}
+              date={date}
+              androidVariant="iosClone"
+              customStyles={{
+                dateIcon: {
+                  position: 'absolute',
+                  right: -5,
+                  top: 4,
+                  marginLeft: 0,
+                },
+                dateInput: {
+                  borderColor: 'gray',
+                  alignItems: 'flex-start',
+                  borderWidth: 0,
+                  borderBottomWidth: 1,
+                },
+                placeholderText: {
+                  fontSize: 17,
+                  color: 'gray',
+                },
+                dateText: {
+                  fontSize: 17,
+                },
+              }}
+              onConfirm={date => {
+                setOpen(false);
+                setDate(date);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+              onDateChange={date => {
+                setDate(date);
+              }}
+            />
+          </View>
+          <CountrySelector />
+          <UploadImage />
+          {/* <RNPickerSelect
           onValueChange={value => console.log(value)}
           useNativeAndroidPickerStyle={false}
           placeholder={{
@@ -372,19 +391,20 @@ const UserDetails = ({navigation}) => {
             {label: 'Hockey', value: 'hockey'},
             {label: 'Football', value: 'football'},
           ]}
-        />
+        /> */}
 
-        <View style={[styles.button, {marginTop: 50}]}>
-          <TouchableOpacity
-            style={styles.signIn}
-            onPress={() => registerHandler(email, password)}>
-            <LinearGradient
-              colors={['#08d4c4', '#01ab9d']}
-              style={styles.signIn}>
-              <Text style={styles.textSign}> Register </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
+          <View style={[styles.button, {marginTop: 50, marginBottom: 50}]}>
+            <TouchableOpacity
+              style={styles.signIn}
+              onPress={() => registerHandler(email, password)}>
+              <LinearGradient
+                colors={['#08d4c4', '#01ab9d']}
+                style={styles.signIn}>
+                <Text style={styles.textSign}> Register </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </Animatable.View>
     </View>
   );
