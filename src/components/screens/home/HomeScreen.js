@@ -22,7 +22,7 @@ import {
 import BannerSlider from '../../ultis/banner/bannerSlider';
 import CustomSwitch from '../../ultis/customSwitch/customSwitch';
 import ListItem from '../../ultis/listItem/listItem';
-
+import styles from './HomeStyle';
 function HomeScreen({navigation}) {
   const [groceryTab, setGroceryTab] = useState(1);
 
@@ -38,9 +38,9 @@ function HomeScreen({navigation}) {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
-      <ScrollView style={{padding: 20}}>
-        <StatusBar backgroundColor="transparent" barStyle="light-content" />
+    <View style={styles.container}>
+      <ScrollView style={{paddingHorizontal: 20}}>
+        <StatusBar backgroundColor="#009387" barStyle="light-content" />
         <View
           style={{
             flexDirection: 'row',
@@ -134,7 +134,7 @@ function HomeScreen({navigation}) {
           )}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

@@ -6,39 +6,18 @@ import {useDispatch} from 'react-redux';
 import {useState} from 'react';
 import {loginUser, signOut, signUpUser} from '../../../redux/slicer/AuthSlicer';
 import {useEffect} from 'react';
-import ImagePicker from 'react-native-image-crop-picker';
+import {setUserDetailData} from '../../../redux/slicer/AuthSlicer';
+import {selectUserDetailData} from '../../../redux/slicer/AuthSlicer';
 
 export default useSignIn = (email, password) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
-  const [userDetails, setUserDetails] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    dateOfBirth: '',
-    gender: '',
-    phone: '',
-    secretQuestion: '',
-    secretAnswer: '',
-    recoverEmail: '',
-    filePath: null,
-    countryCode: '',
-    country: '',
-    mobile: '',
-  });
+  const userDetail = useSelector(state => state.auth.userDetailData);
+  console.log('user useSignIn', userDetail);
   useEffect(() => {
-    console.log(userDetails);
-  }, [userDetails]);
-
-  const filePath = userDetails.filePath;
-  const dateOfBirth = userDetails.dateOfBirth;
-  const firstName = userDetails.firstName;
-  const lastName = userDetails.lastName;
-  const gender = userDetails.gender;
-  const country = userDetails.country;
-  const countryCode = userDetails.countryCode;
-  const mobile = userDetails.mobile;
+    console.log('user useSignIn coming from redux store', userDetail);
+  }, [userDetail]);
 
   const loginHandler = async (email, password) => {
     let user = {
@@ -58,66 +37,78 @@ export default useSignIn = (email, password) => {
     if (email.length < 4 || password.length < 8) {
       alert('Please enter a valid email and password');
     } else {
-      setUserDetails({
-        email: email,
-        password: password,
-        username: username,
-      });
+      let user = {
+        username,
+        email,
+        password,
+      };
+      console.log('user', user);
+      dispatch(setUserDetailData(user));
+
       navigation.navigate('userDetails');
     }
     // dispatch(signUpUser(userDetails));
   };
-
-  const userDetailsHandler = async () => {
-    console.log('userDetailsHandler');
-  };
-
-  const countryCodeHandler = async (countryCode, country) => {
-    setUserDetails({
-      ...userDetails,
-      countryCode: countryCode,
-      country: country,
-    });
-  };
-  const phoneHandler = async phone => {
-    setUserDetails({
-      ...userDetails,
-      phone: phone,
-    });
-  };
-
-  const imagePathHandler = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true,
-    })
-      .then(image => {
-        console.log(image);
-        setUserDetails({
-          filePath: image.path,
+  const onSignUpHandler = data => {
+    console.log('onSignUpHandler', data);
+    if (data.country === '') {
+      alert('Select your Country');
+    } else if (data.mobile === '') {
+      alert('Select your Mobile Number');
+    } else if (data.firstname === '') {
+      alert('Select your Mobile Number');
+    } else if (data.lastName === '') {
+      alert('Select your Mobile Number');
+    } else if (data.dateOfBirth === '') {
+      alert('Select your Mobile Number');
+    } else if (data.filePath === '') {
+      alert('Select your Mobile Number');
+    } else {
+      let user = {
+        ...userDetail,
+        ...data,
+      };
+      console.log('user Data Total', user);
+      dispatch(signUpUser(user))
+        .then(res => {
+          // setLoading(isLoading);
+          // console.log('TOKEN : ', res.headers.token);
+          // setUserName('');
+          // setMobile('');
+          // console.log('LOGIN RESPONSE => ' + JSON.stringify(res));
+          // if (res.data.success) {
+          //   storeLocalData(constants.ACCESS_TOKEN, res.headers.token);
+          //   storeLocalData(constants.USER_ID, res.data.id);
+          //   storeLocalData(constants.USER_NAME, userName);
+          //   navigation.navigate(NAV_TYPES.HOME_SCREEN, {});
+          // }
+        })
+        .catch(error => {
+          console.log('LOGIN ERROR ', error);
         });
-      })
-      .catch(error => {
-        console.log(error);
-      })
-      .done();
+    }
   };
+  // const handleSubmit = () => {
+  //   if (
+  //     data.email.trim().length >= 4 &&
+  //     data.password.trim().length >= 8 &&
+  //     data.confirm_password.trim().length >= 8
+  //   ) {
+  //     if (data.password === data.confirm_password) {
+  //       registerHandler(data.email, data.password);
+  //     } else {
+  //       alert('Password not match');
+  //     }
+  //   } else {
+  //     alert('Please fill all field');
+  //   }
+  // };
 
   return {
-    imagePathHandler,
     loginHandler,
     signOutHandler,
     registerHandler,
-    setUserDetails,
-    userDetailsHandler,
-    filePath,
-    dateOfBirth,
-    firstName,
-    lastName,
-    gender,
-    countryCodeHandler,
-    phoneHandler,
+    onSignUpHandler,
   };
 };
 

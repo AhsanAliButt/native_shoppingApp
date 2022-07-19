@@ -44,6 +44,7 @@ const signUpUser = createAsyncThunk(
   'users/loginUser',
   async ({email, password}) => {
     try {
+      console.log('SignUp Function', user);
       console.log(email, password);
       const user = await auth()
         .createUserWithEmailAndPassword(email, password)
@@ -55,40 +56,40 @@ const signUpUser = createAsyncThunk(
             createdAt: new Date(),
           });
           console.log('Add user in Users', result);
+        })
+        .then(() => {
+          const data = addDoc(
+            collectionRef,
+            'userId',
+            'email',
+            'name',
+            'phone',
+            'address',
+            'city',
+            'state',
+            'zip',
+            'country',
+            'age',
+            'rank',
+            'job',
+          );
+          const localData = {...user, uid: data.id};
+          return localData;
+          console.log('Congrats You are logged in', localData);
         });
-      //   .then(() => {
-      //     const data = addDoc(
-      //       collectionRef,
-      //       'userId',
-      //       'email',
-      //       'name',
-      //       'phone',
-      //       'address',
-      //       'city',
-      //       'state',
-      //       'zip',
-      //       'country',
-      //       'age',
-      //       'rank',
-      //       'job',
-      //     );
-      //     const localData = {...user, uid: data.id};
-      //     return localData;
-      //     console.log('Congrats You are logged in', localData);
-      //   });
-      // let userData = await db
-      //   .collection('users')
-      //   .where('userId', '==', user?.user?.uid)
-      //   .get();
-      // let data = {};
-      // userData.forEach(doc => {
-      //   data = {docId: doc.id, ...doc.data()};
-      //   console.log(data);
-      // });
-      // // console.log('Congrats You are logged in', email);
-      // return {user: data};
+      let userData = await db
+        .collection('users')
+        .where('userId', '==', user?.user?.uid)
+        .get();
+      let data = {};
+      userData.forEach(doc => {
+        data = {docId: doc.id, ...doc.data()};
+        console.log(data);
+      });
+      // console.log('Congrats You are logged in', email);
+      return {user: data};
     } catch (error) {
-      const message =
+      const messssage =
         (error.response &&
           error.response.data &&
           error.response.data.message) ||
@@ -142,6 +143,7 @@ const authSlice = createSlice({
     token: null,
     loading: false,
     userData: {},
+    userDetailData: {},
   },
   reducers: {
     setIsLogin: (state, action) => {
@@ -150,6 +152,10 @@ const authSlice = createSlice({
     },
     setUserData: (state, action) => {
       state.userData = action.payload;
+    },
+    setUserDetailData: (state, action) => {
+      console.log('setUserDetailData', action);
+      state.userDetailData = action.payload;
     },
   },
   extraReducers: builder => {
@@ -187,5 +193,6 @@ export default authSlice.reducer;
 // export const selectUserData = state => state.auth.userData;
 // export const selectNewUser = state => state.auth.newUser;
 // export const selectCurrentUser = state => state.auth.currentUser;
+// export const selectUserDetailData = state => state.auth.userDetailData;
 
-export const {setIsLogin, setUserData} = authSlice.actions;
+export const {setIsLogin, setUserData, setUserDetailData} = authSlice.actions;

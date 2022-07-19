@@ -2,58 +2,23 @@ import {View, Text, TextInput} from 'react-native';
 import React, {useState} from 'react';
 import CountryPicker from 'react-native-country-picker-modal';
 import styles from './styles';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import useSignIn from '../../splash/useAuth';
 
-const CountrySelector = () => {
-  const {countryCode, mobile, country} = useSignIn();
-  // const [country, setCountry] = useState('');
-  // const [countryCode, setCountryCode] = useState('');
-  // const [mobile, setMobile] = useState('');
+const CountrySelector = ({data, setData}) => {
+  const [country, setCountry] = useState('');
+  const [countryCode, setCountryCode] = useState('');
   const onSelect = country => {
     console.log(country);
+    const code = country.cca2;
     setCountryCode(country.cca2);
     setCountry(country);
+    setData({...data, country: country.name, countryCode: code});
   };
-  const onSignUpClick = () => {
-    if (country === '') {
-      alert('Select your Country');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else if (mobile === '') {
-      alert('Select your Mobile Number');
-    } else {
-      setLoading(!isLoading);
-      loginUser(getLoginModel(userName, mobile))
-        .then(res => {
-          setLoading(isLoading);
-          console.log('TOKEN : ', res.headers.token);
-          setUserName('');
-          setMobile('');
-          console.log('LOGIN RESPONSE => ' + JSON.stringify(res));
 
-          if (res.data.success) {
-            storeLocalData(constants.ACCESS_TOKEN, res.headers.token);
-            storeLocalData(constants.USER_ID, res.data.id);
-            storeLocalData(constants.USER_NAME, userName);
-
-            navigation.navigate(NAV_TYPES.HOME_SCREEN, {});
-          }
-        })
-        .catch(error => {
-          console.log('LOGIN ERROR ', error);
-        });
-    }
+  const mobileHandler = val => {
+    setData({
+      ...data,
+      mobile: val,
+    });
   };
   return (
     <View
@@ -92,6 +57,8 @@ const CountrySelector = () => {
           withFilter={true}
           withModal={true}
           onSelect={onSelect}
+          // value={data.country}
+          // onChange={val => setData({...data, country: val.name})}
         />
         <View style={{height: '2%', backgroundColor: 'green'}} />
       </View>
@@ -124,8 +91,8 @@ const CountrySelector = () => {
               placeholderTextColor="#05375a"
               autoCapitalize="none"
               autoCorrect={false}
-              onChangeText={text => setMobile(text)}
-              value={mobile}
+              onChangeText={val => mobileHandler(val)}
+              value={data.mobile}
             />
           </View>
         </View>

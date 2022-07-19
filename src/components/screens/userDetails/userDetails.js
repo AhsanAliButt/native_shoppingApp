@@ -3,26 +3,14 @@ import {
   TextInput,
   Text,
   View,
-  Platform,
   StatusBar,
   ScrollView,
-  Dimensions,
-  Button,
 } from 'react-native';
-import {Checkbox} from '@react-native-community/checkbox';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styles from './styles';
 import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-import TextInputWithLabel from '../../textInput/TextInputWithLabel';
 import * as Animatable from 'react-native-animatable';
-import validators from '../../ultis/Validator';
-import {useState} from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import useSignIn from '../../screens/splash/useAuth';
-import CheckBox from '@react-native-community/checkbox';
-import RNPickerSelect from 'react-native-picker-select';
 import DatePicker from 'react-native-date-picker';
 import Foundation from 'react-native-vector-icons/Foundation';
 import RadioForm, {
@@ -32,156 +20,31 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import CountrySelector from './components/countryPicker';
 import UploadImage from './components/imagePicker';
+import moment from 'moment';
 
 const UserDetails = ({navigation}) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const selectedDate = moment(date).format('MMMM D, YYYY');
+  const currentDate = moment(date).format('DD-MM-YYYY');
 
-  const currentDate = date.toLocaleDateString();
+  //convert month to name
 
-  console.log(currentDate);
+  const {onSignUpHandler} = useSignIn();
 
-  const {registerHandler} = useSignIn();
-  // const dispatch = useDispatch();
   const [data, setData] = useState({
-    email: '',
-    password: '',
+    firstName: '',
+    lastName: '',
     gender: '',
-    confirm_password: '',
-    check_textInputChange: false,
-    secureTextEntry: true,
-    confirm_secureTextEntry: true,
-    isValidUser: true,
-    isValidPassword: true,
-    isValidConfirmPassword: true,
+    country: '',
+    countryCode: '',
+    mobile: '',
+    imagePath: '',
+    age: '',
   });
-  const textInputChange = val => {
-    if (val.trim().length >= 4) {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: true,
-        isValidUser: true,
-      });
-    } else {
-      setData({
-        ...data,
-        email: val,
-        check_textInputChange: false,
-        isValidUser: false,
-      });
-    }
-  };
-
-  const handlePasswordChange = val => {
-    if (val.trim().length >= 8) {
-      setData({
-        ...data,
-        password: val,
-        isValidPassword: true,
-      });
-    } else {
-      setData({
-        ...data,
-        password: val,
-        isValidPassword: false,
-      });
-    }
-  };
-  const handleConfirmPasswordChange = val => {
-    if (val.trim().length >= 8) {
-      setData({
-        ...data,
-        confirm_password: val,
-        isValidConfirmPassword: true,
-      });
-    } else {
-      setData({
-        ...data,
-        confirm_password: val,
-        isValidConfirmPassword: false,
-      });
-    }
-  };
-
-  const handleValidEmail = val => {
-    if (!val) {
-      setData({
-        ...data,
-        isValidEmail: true,
-      });
-    } else {
-      if (val.trim.length >= 4) {
-        setData({
-          ...data,
-          isValidEmail: true,
-        });
-      } else {
-        setData({
-          ...data,
-          isValidEmail: false,
-        });
-      }
-    }
-  };
-
-  const handleValidPassword = val => {
-    if (!val) {
-      setData({
-        ...data,
-        isValidPassword: true,
-      });
-    } else {
-      if (val.trim.length >= 8) {
-        setData({
-          ...data,
-          isValidPassword: true,
-        });
-      } else {
-        setData({
-          ...data,
-          isValidPassword: false,
-        });
-      }
-    }
-  };
-
-  const handleConfirmValidPassword = val => {
-    if (!val) {
-      setData({
-        ...data,
-        isValidPassword: true,
-      });
-    } else {
-      if (val.trim.length >= 8) {
-        setData({
-          ...data,
-          isValidPassword: true,
-        });
-      } else {
-        setData({
-          ...data,
-          isValidPassword: false,
-        });
-      }
-    }
-  };
-
-  const updateSecureTextEntry = () => {
-    setData({
-      ...data,
-      secureTextEntry: !data.secureTextEntry,
-    });
-  };
-  const updateConfirmSecureTextEntry = () => {
-    setData({
-      ...data,
-      confirm_secureTextEntry: !data.confirm_secureTextEntry,
-    });
-  };
-
-  const email = data.email;
-  const password = data.password;
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const radio_props = [
     {label: 'Male  ', value: 'Male'},
@@ -189,21 +52,6 @@ const UserDetails = ({navigation}) => {
     {label: 'Other  ', value: 'Other'},
   ];
 
-  // const handleSubmit = () => {
-  //   if (
-  //     data.email.trim().length >= 4 &&
-  //     data.password.trim().length >= 8 &&
-  //     data.confirm_password.trim().length >= 8
-  //   ) {
-  //     if (data.password === data.confirm_password) {
-  //       registerHandler(data.email, data.password);
-  //     } else {
-  //       alert('Password not match');
-  //     }
-  //   } else {
-  //     alert('Please fill all field');
-  //   }
-  // };
   const handleCheckBox = val => {
     if (val) {
       setToggleCheckBox(true);
@@ -212,8 +60,15 @@ const UserDetails = ({navigation}) => {
     }
   };
 
+  const handleFirstName = val => {
+    const result = val.replace(/[^a-z]/gi, '');
+    setData({...data, firstName: result});
+    console.log(result);
+  };
+
   const handleLastName = val => {
     const result = val.replace(/[^a-z]/gi, '');
+    setData({...data, lastName: result});
     console.log(result);
   };
 
@@ -249,7 +104,7 @@ const UserDetails = ({navigation}) => {
                   type="text"
                   style={styles.textInput}
                   autoCapitalize="none"
-                  onChangeText={val => textInputChange(val)}
+                  onChangeText={val => handleFirstName(val)}
                 />
               </View>
             </View>
@@ -279,31 +134,15 @@ const UserDetails = ({navigation}) => {
           <View style={styles.action}>
             <RadioForm
               radio_props={radio_props}
-              initial={0}
+              initial={-1}
               formHorizontal={true}
               buttonSize={8}
               // labelHorizontal={true}
               buttonColor={'#2196f3'}
               animation={true}
-              onPress={value => {
-                console.log(value);
-              }}
+              onPress={value => setData({...data, gender: value})}
             />
           </View>
-          {/* <View style={styles.action}>
-          <CheckBox
-            disabled={false}
-            value={toggleCheckBox}
-            onValueChange={val => handleCheckBox(val)}
-          />
-          <CheckBox
-            disabled={false}
-            value={toggleCheckBox2}
-            onValueChange={newValue => setToggleCheckBox2(newValue)}
-          />
-          <CheckBox value={true} />
-          <CheckBox value={false} />
-        </View> */}
 
           <Text style={[styles.text_footer, {marginTop: 20}]}> Age</Text>
           <View
@@ -357,46 +196,24 @@ const UserDetails = ({navigation}) => {
               onConfirm={date => {
                 setOpen(false);
                 setDate(date);
+                setData({...data, age: moment(date).format('MMMM D, YYYY')});
               }}
               onCancel={() => {
                 setOpen(false);
               }}
               onDateChange={date => {
                 setDate(date);
+                setData({...data, age: date});
               }}
             />
           </View>
-          <CountrySelector />
-          <UploadImage />
-          {/* <RNPickerSelect
-          onValueChange={value => console.log(value)}
-          useNativeAndroidPickerStyle={false}
-          placeholder={{
-            label: 'Select Your Country...',
-            value: null,
-          }}
-          style={{
-            placeholder: {color: '#05375a'},
-            inputAndroid: {
-              color: 'white',
-              borderRadius: 5,
-            },
-          }}
-          items={[
-            {label: 'Football', value: 'football'},
-            {label: 'Baseball', value: 'baseball'},
-            {label: 'Hockey', value: 'hockey'},
-            {label: 'Football', value: 'football'},
-            {label: 'Baseball', value: 'baseball'},
-            {label: 'Hockey', value: 'hockey'},
-            {label: 'Football', value: 'football'},
-          ]}
-        /> */}
+          <CountrySelector data={data} setData={setData} />
+          <UploadImage data={data} setData={setData} />
 
           <View style={[styles.button, {marginTop: 50, marginBottom: 50}]}>
             <TouchableOpacity
               style={styles.signIn}
-              onPress={() => registerHandler(email, password)}>
+              onPress={() => onSignUpHandler(data)}>
               <LinearGradient
                 colors={['#08d4c4', '#01ab9d']}
                 style={styles.signIn}>
