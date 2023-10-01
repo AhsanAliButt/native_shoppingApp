@@ -1,9 +1,7 @@
 import {useSelector} from 'react-redux';
-import auth from '@react-native-firebase/auth';
-import {goToHomePage} from '../../constants/consttant';
+
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
-import {useState} from 'react';
 import {loginUser, signOut, signUpUser} from '../../../redux/slicer/AuthSlicer';
 import {useEffect} from 'react';
 import {setUserDetailData} from '../../../redux/slicer/AuthSlicer';
@@ -32,44 +30,57 @@ export default useSignIn = (email, password) => {
     console.log('dispatched done');
   };
 
-  const registerHandler = async (username, email, password) => {
-    console.log('emai =>', email, 'Password', password, 'username', username);
-    if (email.length < 4 || password.length < 8) {
-      alert('Please enter a valid email and password');
-    } else {
+  const registerHandler = async data => {
+    if (!data.username) {
+      return alert('plz enter name');
+    }
+    if (!data.username.trim().length >= 3) {
+      return alert('plz enter Valid name');
+    }
+    if (!data.email.trim().length >= 4) {
+      return alert('plz enter Valid email address');
+    }
+    if (
+      !data.password.trim().length >= 8 &&
+      !data.confirm_password.trim().length >= 8
+    ) {
+      return alert('plz enter Valid password');
+    }
+    if (data.password === data.confirm_password) {
       let user = {
-        username,
-        email,
-        password,
+        username: data.username,
+        email: data.email,
+        password: data.password,
       };
       console.log('user', user);
       dispatch(setUserDetailData(user));
-
       navigation.navigate('userDetails');
+    } else {
+      alert('Password not match');
     }
     // dispatch(signUpUser(userDetails));
   };
   const onSignUpHandler = data => {
     console.log('onSignUpHandler', data);
     if (data.country === '') {
-      alert('Select your Country');
-    } else if (data.mobile === '') {
-      alert('Select your Mobile Number');
+      return alert('Select your Country');
+    } else if (!data.gender) {
+      return alert('Select Gender');
     } else if (data.firstname === '') {
-      alert('Select your Mobile Number');
+      return alert('Enter your first name');
     } else if (data.lastName === '') {
-      alert('Select your Mobile Number');
-    } else if (data.dateOfBirth === '') {
-      alert('Select your Mobile Number');
-    } else if (data.filePath === '') {
-      alert('Select your Mobile Number');
+      return alert('Enter your LastName');
+    } else if (data.imagePath === '') {
+      return alert('plz Add Picture');
+    } else if (data.age === '') {
+      return alert('Select your CountryCode');
     } else {
-      let user = {
+      let userDetails = {
         ...userDetail,
         ...data,
       };
-      console.log('user Data Total', user);
-      dispatch(signUpUser(user))
+      console.log('user Data Total', userDetails);
+      dispatch(signUpUser(userDetails))
         .then(res => {
           // setLoading(isLoading);
           // console.log('TOKEN : ', res.headers.token);
@@ -88,21 +99,6 @@ export default useSignIn = (email, password) => {
         });
     }
   };
-  // const handleSubmit = () => {
-  //   if (
-  //     data.email.trim().length >= 4 &&
-  //     data.password.trim().length >= 8 &&
-  //     data.confirm_password.trim().length >= 8
-  //   ) {
-  //     if (data.password === data.confirm_password) {
-  //       registerHandler(data.email, data.password);
-  //     } else {
-  //       alert('Password not match');
-  //     }
-  //   } else {
-  //     alert('Please fill all field');
-  //   }
-  // };
 
   return {
     loginHandler,
@@ -114,4 +110,4 @@ export default useSignIn = (email, password) => {
 
 // Write a Programe get UserDetails from singup screen "Done"
 // Send them to RegisterHandler and Save in state "Done"
-// and userDetails Screen and send them all to the reducer
+// and userDetails Screen and send them all to the reducer "Done"

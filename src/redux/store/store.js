@@ -9,8 +9,20 @@ export const store = configureStore({
     cart: cartReducer,
     devTools: true,
   },
+  // middleware: getDefaultMiddleware =>
+  //   getDefaultMiddleware({
+  //     immutableCheck: {
+  //       // Ignore state paths, e.g. state for 'items':
+  //       ignoredPaths: ['items.data'],
+  //     },
+  //     serializableCheck: {ignoredPaths: ['some.nested.path']},
+  //   }),
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
+      immutableCheck: {
+        // Ignore state paths, e.g. state for 'items':
+        ignoredPaths: ['items.data'],
+      },
       serializableCheck: false,
     }),
 });

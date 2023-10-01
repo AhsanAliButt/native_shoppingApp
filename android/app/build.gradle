@@ -246,7 +246,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-                        signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
 
         }
         release {
@@ -290,6 +290,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     //  // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    // FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database:8.0.2'
+
+    // FirebaseUI for Cloud Firestore
+    implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
+
+    // FirebaseUI for Firebase Auth
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
+
+    // FirebaseUI for Cloud Storage
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.2'
 
 
   // Add the dependencies for any other desired Firebase products

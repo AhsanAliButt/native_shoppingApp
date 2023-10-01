@@ -1,4 +1,4 @@
-import {Text, View, Dimensions, Image, TouchableOpacity} from 'react-native';
+import {Text, View, Dimensions, Image, TouchableOpacity,ScrollView} from 'react-native';
 import React, {useEffect} from 'react';
 import styles from './LandingStyle';
 import LinearGradient from 'react-native-linear-gradient';

@@ -4,8 +4,6 @@ import {
   Text,
   ImageBackground,
   Image,
-  SafeAreaProvider,
-  SafeAreaView,
 } from 'react-native';
 import React from 'react';
 import {

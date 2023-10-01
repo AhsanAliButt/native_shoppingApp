@@ -7,6 +7,8 @@
 <uses-feature android:name="android.hardware.camera" android:required="false" />
 <uses-feature android:name="android.hardware.camera.front" android:required="false" />
 
+<!-- windowSoftInputMode="adjustPan" -->
+<!-- android:windowSoftInputMode="adjustResize" -->
 
     <application
       android:name=".MainApplication"
@@ -20,7 +22,7 @@
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
         android:launchMode="singleTask"
-        android:windowSoftInputMode="adjustResize"
+        android:windowSoftInputMode="adjustPan"
         android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

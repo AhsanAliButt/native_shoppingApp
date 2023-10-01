@@ -185,7 +185,7 @@ const SignUpScreen = ({navigation}) => {
       <View style={styles.header}>
         <Text style={styles.text_header}> SignUp for More Services !</Text>
       </View>
-      <KeyboardAvoidingView>
+      {/* <KeyboardAvoidingView> */}
         <ScrollView>
           <Animatable.View style={styles.footer} animation="fadeInUpBig">
             <Text style={styles.text_footer}> Username </Text>
@@ -266,7 +266,7 @@ const SignUpScreen = ({navigation}) => {
             <View style={[styles.button, {marginTop: 50}]}>
               <TouchableOpacity
                 style={styles.signIn}
-                onPress={() => registerHandler(name, email, password)}>
+                onPress={() => registerHandler(data)}>
                 <LinearGradient
                   colors={['#08d4c4', '#01ab9d']}
                   style={styles.signIn}>
@@ -276,7 +276,7 @@ const SignUpScreen = ({navigation}) => {
             </View>
           </Animatable.View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      {/* </KeyboardAvoidingView> */}
     </View>
   );
 };

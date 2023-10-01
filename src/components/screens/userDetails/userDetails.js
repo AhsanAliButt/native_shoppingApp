@@ -28,8 +28,6 @@ const UserDetails = ({navigation}) => {
   const selectedDate = moment(date).format('MMMM D, YYYY');
   const currentDate = moment(date).format('DD-MM-YYYY');
 
-  //convert month to name
-
   const {onSignUpHandler} = useSignIn();
 
   const [data, setData] = useState({
